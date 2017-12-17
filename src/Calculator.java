@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Scanner;
 import org.apache.commons.lang3.ArrayUtils;
 
-import models.Decisions;
+import models.Decision;
 
 public class Calculator {
 
@@ -40,7 +40,7 @@ public class Calculator {
 
 	public static void decisionFromInput(String arg) throws Exception, IndexOutOfBoundsException {
 
-		if (arg.startsWith(Decisions.get.getPrefix())) {
+		if (arg.startsWith(Decision.get.getPrefix())) {
 			// gets the value if the variable exists in the map.
 
 			String variableName = arg.substring(arg.indexOf("(") + 1, arg.indexOf(")"));
@@ -52,7 +52,7 @@ public class Calculator {
 				System.err.println("Error: You haven't declared any variable named " + variableName);
 			}
 
-		} else if (arg.startsWith(Decisions.put.getPrefix())) {
+		} else if (arg.startsWith(Decision.put.getPrefix())) {
 			// sets a value to a variable.
 
 			List<Object> storeStatementAndValue = new ArrayList<Object>();
@@ -76,7 +76,7 @@ public class Calculator {
 				System.err.println("Error: Variable '" + variableName + "' exists in the map.");
 			}
 
-		} else if (arg.startsWith(Decisions.print.getPrefix())) {
+		} else if (arg.startsWith(Decision.print.getPrefix())) {
 			// prints all operations
 
 			if (map.size() > 0) {
@@ -90,7 +90,7 @@ public class Calculator {
 			} else {
 				System.err.println("Error: You must declare some variables first in order to show them all.");
 			}
-		} else if (arg.startsWith(Decisions.remove.getPrefix())) {
+		} else if (arg.startsWith(Decision.remove.getPrefix())) {
 			// removes the variable if it exists in the map.
 
 			String variableName = arg.substring(arg.indexOf("(") + 1, arg.indexOf(")"));

@@ -1,6 +1,6 @@
 package models;
 
-public enum Decisions {
+public enum Decision {
 	
 	get("get"),
 	put("put"),
@@ -9,7 +9,7 @@ public enum Decisions {
 
 	private String prefix;
 	
-	Decisions(String prefix) {
+	Decision(String prefix) {
 		this.prefix = prefix;
 	}
 	
