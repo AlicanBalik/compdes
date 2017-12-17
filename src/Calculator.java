@@ -107,7 +107,7 @@ public class Calculator {
 		}
 	}
 
-	public static Float calculate(String arg) throws Exception, IndexOutOfBoundsException {
+	public static Float calculate(String arg) throws Exception, IndexOutOfBoundsException, ClassCastException {
 
 		String[] array = arg.split(DELIMETER);
 		array = setEmptyToNullInArray(array);
@@ -174,7 +174,7 @@ public class Calculator {
 
 			} while (!"end".equals(input));
 			System.out.println("Warning: PROGRAM TERMINATED");
-		} catch (IndexOutOfBoundsException e) {
+		} catch (IndexOutOfBoundsException | ClassCastException c) {
 			System.err.println("Exception: Invalid argument...");
 		}
 	}
