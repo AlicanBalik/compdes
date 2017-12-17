@@ -1,17 +1,18 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
-import java.util.Stack;
 import org.apache.commons.lang3.ArrayUtils;
+
+import models.Decisions;
 
 public class Calculator {
 
-	private static final String DELIMETER = "\\((.*)\\)";
-	private static final String DELIMETER2 = "[(\\,\\)|)]";
+	private static final String DELIMETER = "[(\\,\\)|)]";
 
 	private static boolean isAppStarted = false;
-
-	private static Stack<Float> stack = new Stack<Float>();
+	private static Map<String, List<?>> map = new HashMap<String, List<?>>();
 
 	public static boolean isNum(String str) {
 		boolean ret = true;
@@ -23,11 +24,11 @@ public class Calculator {
 		return ret;
 	}
 
-	public static Float convertReturn(String str) {
+	public static Float convertStringToFloat(String str) {
 		return Float.valueOf(str);
 	}
 
-	public static String[] something(String[] arr) {
+	public static String[] setEmptyToNullInArray(String[] arr) {
 		for (int i = 0; i < arr.length; i++) {
 			if ("".equals(arr[i])) {
 				arr[i] = null;
@@ -37,20 +38,86 @@ public class Calculator {
 		return arr;
 	}
 
-	public static void calculate(String arg) throws Exception {
+	public static void decisionFromInput(String arg) throws Exception, IndexOutOfBoundsException {
+
+		if (arg.startsWith(Decisions.get.getPrefix())) {
+			// gets the value if the variable exists in the map.
+
+			String variableName = arg.substring(arg.indexOf("(") + 1, arg.indexOf(")"));
+
+			List<?> helper = map.get(variableName);
+			if (null != helper) {
+				System.out.println("Value: " + helper.get(1));
+			} else {
+				System.err.println("You haven't declared any variable named " + variableName);
+			}
+
+		} else if (arg.startsWith(Decisions.put.getPrefix())) {
+			// sets a value to a variable.
+
+			List<Object> storeStatementAndValue = new ArrayList<Object>();
+
+			String variableName = arg.substring(arg.indexOf("(") + 1, arg.indexOf(","));
+			if (null == map.get(variableName)) {
+
+				// length - 1 to remove last ) which belongs to main operation.
+				// put( //)//
+				String statement = arg.substring(arg.indexOf(",") + 1, arg.length() - 1);
+				Float result = (float) calculate(statement, false);
+
+				storeStatementAndValue.add(statement);
+				storeStatementAndValue.add(result);
+
+				map.put(variableName, storeStatementAndValue);
+				System.out.println("Variable '" + variableName + "' has been declared.\nType get(" + variableName
+						+ ") to see its value.");
+
+			} else {
+				System.err.println("Variable '" + variableName + "' exists in the map.");
+			}
+
+		} else if (arg.startsWith(Decisions.print.getPrefix())) {
+			// prints all operations
+
+			if (map.size() > 0) {
+				for (String key : map.keySet()) {
+					System.out.println("Variable name: " + key);
+					List<?> helper = map.get(key);
+					System.out.println("\tStatement: " + helper.get(0));
+					System.out.println("\tResult: " + helper.get(1));
+					System.out.println("------------------\n");
+				}
+			} else {
+				System.err.println("You must declare some variables first in order to show them all.");
+			}
+		} else if (arg.startsWith(Decisions.remove.getPrefix())) {
+			// removes the variable if it exists in the map.
+
+			String variableName = arg.substring(arg.indexOf("(") + 1, arg.indexOf(")"));
+
+			if (null != map.get(variableName)) {
+				map.remove(variableName);
+				System.out.println("Variable name '" + variableName + "' has been removed from the map.");
+			} else {
+				System.err.println("No variable named '" + variableName + "' found.");
+			}
+		} else {
+			calculate(arg, true);
+		}
+	}
+
+	public static Object calculate(String arg, boolean isAlone) throws Exception, IndexOutOfBoundsException {
 		// add(8,subs(16,mult(3,4)))
 		// div(add(2,3), subs(mult(3,4),add(2,2)))
+		// put(a,add(8,subs(16,mult(3,4))))
 
-		Float result = 1f;
-
-		String[] array = arg.split(DELIMETER2);
-		array = something(array);
+		String[] array = arg.split(DELIMETER);
+		array = setEmptyToNullInArray(array);
 		ArrayUtils.reverse(array);
 
 		List<Object> storesNumber = new ArrayList<Object>();
 
 		for (String token : array) {
-
 			if (null != token) {
 				if (isNum(token)) {
 					storesNumber.add(token);
@@ -60,47 +127,56 @@ public class Calculator {
 					String numberTwo = storesNumber.get(size - 1).toString();
 					switch (token) {
 					case "add":
-						storesNumber.set(size - 2, convertReturn(numberOne) + convertReturn(numberTwo));
+						storesNumber.set(size - 2, convertStringToFloat(numberOne) + convertStringToFloat(numberTwo));
 						storesNumber.remove(size - 1);
 						break;
 					case "subs":
-						storesNumber.set(size - 2, convertReturn(numberTwo) - convertReturn(numberOne));
+						storesNumber.set(size - 2, convertStringToFloat(numberTwo) - convertStringToFloat(numberOne));
 						storesNumber.remove(size - 1);
 						break;
 					case "mult":
-						storesNumber.set(size - 2, convertReturn(storesNumber.get(size - 2).toString())
-								* convertReturn(storesNumber.get(size - 1).toString()));
+						storesNumber.set(size - 2, convertStringToFloat(storesNumber.get(size - 2).toString())
+								* convertStringToFloat(storesNumber.get(size - 1).toString()));
 						storesNumber.remove(size - 1);
 						break;
 					case "div":
-						storesNumber.set(size - 2, convertReturn(numberTwo) / convertReturn(numberOne));
+						storesNumber.set(size - 2, convertStringToFloat(numberTwo) / convertStringToFloat(numberOne));
 						storesNumber.remove(size - 1);
 						break;
 					default:
-						throw new Exception("Invalid arguement");
+						throw new Exception("Invalid argument");
 					}
 				}
 			}
 		}
 		isAppStarted = true;
-		System.out.println("Result: " + storesNumber.get(0));
+		Float result = (float) storesNumber.get(0);
+		if (isAlone) {
+			System.out.println("Unsaved result: " + result);
+			return null;
+		}
+		return result;
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		try {
+			@SuppressWarnings("resource")
 			Scanner reader = new Scanner(System.in);
 			String input;
 
+			String firstMessage = "What is your decision?\nE.g.1: put(a,add(3,3))\nE.g.2: get(a)\nE.g.3: remove(a)\nE.g.4: print";
+			String secondMessage = "\n\nYou may declare more variables with correct statement.";
+
 			do {
-				System.out.println(
-						isAppStarted ? "\nI also accept more inputs...\nType end if you'd like to terminate me."
-								: "Write your statement.\nE.g.: div(add(2,3),subs(mult(3,4),add(2,2)))");
+				System.out.println(isAppStarted ? secondMessage : firstMessage);
 				input = reader.nextLine();
-				calculate(input.toLowerCase().replace(" ", ""));
+
+				decisionFromInput(input.toLowerCase().replace(" ", ""));
+
 			} while (!"end".equals(input));
 			System.out.println("PROGRAM TERMINATED");
-		} catch (Exception e) {
-			System.out.println("Syntax error. Please check your input.");
+		} catch (IndexOutOfBoundsException e) {
+			System.err.println("Invalid argument...");
 		}
 	}
 }
