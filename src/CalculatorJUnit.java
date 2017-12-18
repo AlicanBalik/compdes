@@ -4,6 +4,57 @@ import org.junit.Test;
 
 public class CalculatorJUnit {
 
+	/*********************************************
+	 * Testing decisionFromInput(String arg) PUT operation
+	 * 
+	 * @throws Exception
+	 * @throws IndexOutOfBoundsException
+	 ********************************************/
+
+	@Test(expected = ClassCastException.class)
+	public void PUTdecisionFromInputWithoutVariableNameShouldThrowException()
+			throws IndexOutOfBoundsException, Exception {
+		Calculator.decisionFromInput("put(add(,3,");
+	}
+
+	@Test(expected = ArrayIndexOutOfBoundsException.class)
+	public void PUTdecisionFromInputWithVariableNameShouldThrowException() throws IndexOutOfBoundsException, Exception {
+		Calculator.decisionFromInput("put(a,asdasd)");
+	}
+
+	@Test
+	public void PUTdecisionShouldNotThrowException() throws IndexOutOfBoundsException, Exception {
+		Calculator.decisionFromInput("put(a,add(5,5))");
+	}
+
+	/*********************************************
+	 * Testing calculate(String arg)
+	 * 
+	 * @throws Exception
+	 * @throws IndexOutOfBoundsException
+	 ********************************************/
+
+	@Test(expected = Exception.class)
+	public void calculateWithoutNumbersShouldThrowException() throws IndexOutOfBoundsException, Exception {
+		Calculator.calculate("add(,,)");
+	}
+
+	@Test(expected = Exception.class)
+	public void calculateWithLettersShouldThrowException() throws IndexOutOfBoundsException, Exception {
+		Calculator.calculate("add(a,3.5)");
+	}
+
+	@Test(expected = Exception.class)
+	public void calculateWithWrongSyntaxShouldThrowException() throws IndexOutOfBoundsException, Exception {
+		Calculator.calculate("div(add(2,3), subs(mult(3,4),add(2,2)");
+	}
+
+	@Test(expected = Exception.class)
+	public void calculateWithShouldNotThrowException() throws IndexOutOfBoundsException, Exception {
+		Calculator.calculate("add(3,3)");
+		Calculator.calculate("add(add(mult(3,div(15,5)), subs(100,50), 15))");
+	}
+
 	/*****************
 	 * Testing isNum(String str)
 	 ****************/
@@ -30,27 +81,4 @@ public class CalculatorJUnit {
 	public void convertStringToFloatShouldThrowException() {
 		Calculator.convertStringToFloat("a");
 	}
-	
-	/*********************************************
-	 * Testing decisionFromInput(String arg)
-	 * @throws Exception 
-	 * @throws IndexOutOfBoundsException 
-	 ********************************************/
-	
-	@Test(expected = ClassCastException.class)
-	public void decisionFromInputWithoutVariableNameShouldThrowException() throws IndexOutOfBoundsException, Exception {
-		Calculator.decisionFromInput("put(add(,3,");
-	}
-	
-	@Test(expected = ArrayIndexOutOfBoundsException.class)
-	public void decisionFromInputWithVariableNameShouldThrowException() throws IndexOutOfBoundsException, Exception {
-		Calculator.decisionFromInput("put(a,asdasd)");
-	}
-	
-	/*********************************************
-	 * Testing calculate(String arg)
-	 * @throws Exception 
-	 * @throws IndexOutOfBoundsException 
-	 ********************************************/
-	
 }

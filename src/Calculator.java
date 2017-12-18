@@ -49,7 +49,7 @@ public class Calculator {
 			if (null != helper) {
 				System.out.println("Value: " + helper.get(1));
 			} else {
-				System.err.println("You haven't declared any variable named " + variableName);
+				System.err.println("Error: You haven't declared any variable named " + variableName);
 			}
 
 		} else if (arg.startsWith(Decisions.put.getPrefix())) {
@@ -73,7 +73,7 @@ public class Calculator {
 						+ ") to see its value.");
 
 			} else {
-				System.err.println("Variable '" + variableName + "' exists in the map.");
+				System.err.println("Error: Variable '" + variableName + "' exists in the map.");
 			}
 
 		} else if (arg.startsWith(Decisions.print.getPrefix())) {
@@ -88,7 +88,7 @@ public class Calculator {
 					System.out.println("------------------\n");
 				}
 			} else {
-				System.err.println("You must declare some variables first in order to show them all.");
+				System.err.println("Error: You must declare some variables first in order to show them all.");
 			}
 		} else if (arg.startsWith(Decisions.remove.getPrefix())) {
 			// removes the variable if it exists in the map.
@@ -99,7 +99,7 @@ public class Calculator {
 				map.remove(variableName);
 				System.out.println("Variable name '" + variableName + "' has been removed from the map.");
 			} else {
-				System.err.println("No variable named '" + variableName + "' found.");
+				System.err.println("Error: No variable named '" + variableName + "' found.");
 			}
 		} else {
 			Float result = calculate(arg);
@@ -142,7 +142,7 @@ public class Calculator {
 						storesNumber.remove(size - 1);
 						break;
 					default:
-						throw new Exception("Invalid argument");
+						throw new Exception("Exception: Invalid argument");
 					}
 				}
 			}
@@ -173,9 +173,9 @@ public class Calculator {
 				decisionFromInput(input.toLowerCase().replace(" ", ""));
 
 			} while (!"end".equals(input));
-			System.out.println("PROGRAM TERMINATED");
+			System.out.println("Warning: PROGRAM TERMINATED");
 		} catch (IndexOutOfBoundsException e) {
-			System.err.println("Invalid argument...");
+			System.err.println("Exception: Invalid argument...");
 		}
 	}
 }
