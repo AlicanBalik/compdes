@@ -16,10 +16,17 @@ public class CalculatorJUnit {
 			throws IndexOutOfBoundsException, Exception {
 		Calculator.decisionFromInput("put(add(,3,");
 	}
+	
+	@Test(expected = Exception.class)
+	public void PUTdecisionFromInputShouldThrowException()
+			throws IndexOutOfBoundsException, Exception {
+		Calculator.decisionFromInput("put(add(m,,+,/,35f,3))");
+	}
 
 	@Test(expected = ArrayIndexOutOfBoundsException.class)
 	public void PUTdecisionFromInputWithVariableNameShouldThrowException() throws IndexOutOfBoundsException, Exception {
-		Calculator.decisionFromInput("put(a,asdasd)");
+		// missing ) of put()
+		Calculator.decisionFromInput("put(a,add(mult(3,5))");
 	}
 
 	@Test
