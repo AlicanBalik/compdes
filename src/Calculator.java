@@ -63,7 +63,7 @@ public class Calculator {
 				// length - 1 to remove last ) which belongs to main operation.
 				// put( //)//
 				String statement = arg.substring(arg.indexOf(",") + 1, arg.length() - 1);
-				Float result = (float) calculate(statement, false);
+				Float result = calculate(statement);
 
 				storeStatementAndValue.add(statement);
 				storeStatementAndValue.add(result);
@@ -102,14 +102,12 @@ public class Calculator {
 				System.err.println("No variable named '" + variableName + "' found.");
 			}
 		} else {
-			calculate(arg, true);
+			Float result = calculate(arg);
+			System.out.println("Unsaved result: " + result);
 		}
 	}
 
-	public static Object calculate(String arg, boolean isAlone) throws Exception, IndexOutOfBoundsException {
-		// add(8,subs(16,mult(3,4)))
-		// div(add(2,3), subs(mult(3,4),add(2,2)))
-		// put(a,add(8,subs(16,mult(3,4))))
+	public static Float calculate(String arg) throws Exception, IndexOutOfBoundsException {
 
 		String[] array = arg.split(DELIMETER);
 		array = setEmptyToNullInArray(array);
@@ -150,15 +148,16 @@ public class Calculator {
 			}
 		}
 		isAppStarted = true;
-		Float result = (float) storesNumber.get(0);
-		if (isAlone) {
-			System.out.println("Unsaved result: " + result);
-			return null;
-		}
-		return result;
+
+		return (float) storesNumber.get(0);
 	}
 
 	public static void main(String[] args) throws Exception {
+
+		// add(8,subs(16,mult(3,4)))
+		// div(add(2,3), subs(mult(3,4),add(2,2)))
+		// put(a,add(8,subs(16,mult(3,4))))
+
 		try {
 			@SuppressWarnings("resource")
 			Scanner reader = new Scanner(System.in);
