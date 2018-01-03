@@ -117,8 +117,16 @@ public class Calculator {
 
 		for (String token : array) {
 			if (null != token) {
-				if (isNum(token)) {
-					storesNumber.add(token);
+				if (isNum(token) || (token.length() == 1 && Character.isLetter(token.charAt(0)))) {
+					if (Character.isLetter(token.charAt(0))) {
+						if (null != map.get(token)) {
+							storesNumber.add(map.get(token).get(1));
+						} else {
+							throw new Exception("Variable " + token + " does not exist...");
+						}
+					} else {
+						storesNumber.add(token);
+					}
 				} else {
 					int size = storesNumber.size();
 					String numberOne = storesNumber.get(size - 2).toString();
