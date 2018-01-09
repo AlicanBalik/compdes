@@ -1,9 +1,15 @@
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Scanner;
 import org.apache.commons.lang3.ArrayUtils;
+
+import com.google.gson.Gson;
 
 import models.Decision;
 
@@ -12,7 +18,8 @@ public class Calculator {
 	private static final String DELIMETER = "[(\\,\\)|)]";
 
 	private static boolean isAppStarted = false;
-	private static Map<String, List<?>> map = new HashMap<String, List<?>>();
+	private static Map<String, List<Object>> map = new HashMap<String, List<Object>>();
+	
 
 	public static boolean isNum(String str) {
 		boolean ret = true;
@@ -39,8 +46,10 @@ public class Calculator {
 	}
 
 	public static void decisionFromInput(String arg) throws Exception, IndexOutOfBoundsException {
-
-		if (arg.startsWith(Decision.get.getPrefix())) {
+		if (arg.equals(Decision.save.getPrefix())) {
+			saveToFile(map);
+			System.out.println("The map has been saved to file. End of the program");
+		} else if (arg.startsWith(Decision.get.getPrefix())) {
 			// gets the value if the variable exists in the map.
 
 			String variableName = arg.substring(arg.indexOf("(") + 1, arg.indexOf(")"));
@@ -160,6 +169,24 @@ public class Calculator {
 		return (float) storesNumber.get(0);
 	}
 
+	public static void saveToFile(Map<String, List<Object>> map) {
+		Properties properties = new Properties();
+		
+		for (Map.Entry<String, List<Object>> entry : map.entrySet()) {
+			String jsonList = new Gson().toJson(entry.getValue());
+			
+			properties.put(entry.getKey(), jsonList);
+		}
+		
+		try {
+			properties.store(new FileOutputStream("map.txt"), null);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public static void main(String[] args) throws Exception {
 
 		// add(8,subs(16,mult(3,4)))
@@ -179,10 +206,11 @@ public class Calculator {
 				input = reader.nextLine();
 
 				decisionFromInput(input.toLowerCase().replace(" ", ""));
-
+						
 			} while (!"end".equals(input));
 			System.out.println("Warning: PROGRAM TERMINATED");
 		} catch (IndexOutOfBoundsException | ClassCastException c) {
+			c.printStackTrace();
 			System.err.println("Exception: Invalid argument...");
 		}
 	}
