@@ -6,7 +6,8 @@ public enum Decision {
 	put("put"),
 	print("print"),
 	remove("remove"),
-	save("save");
+	save("save"),
+	load("load");
 
 	private String prefix;
 	
