@@ -2,6 +2,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import helpers.CalculatorUtils;
+
 public class CalculatorJUnit {
 
 	/*********************************************
@@ -67,12 +69,12 @@ public class CalculatorJUnit {
 	 ****************/
 	@Test
 	public void isNumShouldReturnFalse() {
-		assertEquals(false, Calculator.isNum("a"));
+		assertEquals(false, CalculatorUtils.isNum("a"));
 	}
 
 	@Test
 	public void isNumShouldReturnTrue() {
-		assertEquals(true, Calculator.isNum("99.99"));
+		assertEquals(true, CalculatorUtils.isNum("99.99"));
 	}
 
 	/********************************
@@ -81,11 +83,11 @@ public class CalculatorJUnit {
 
 	@Test()
 	public void convertStringToFloatShouldReturnFloatNumber() {
-		assertEquals(new Float("0.34"), Calculator.convertStringToFloat("0.34"));
+		assertEquals(new Float("0.34"), CalculatorUtils.convertStringToFloat("0.34"));
 	}
 
 	@Test(expected = NumberFormatException.class)
 	public void convertStringToFloatShouldThrowException() {
-		Calculator.convertStringToFloat("a");
+		CalculatorUtils.convertStringToFloat("a");
 	}
 }
