@@ -1,14 +1,16 @@
 import java.util.Scanner;
+
+import helpers.CalculatorProperties;
 import services.CalculatorServices;
 
 public class Calculator extends CalculatorServices {
 
-
-//	private static CalculatorServices services;
-
+	 private static CalculatorProperties calculatorProperties;
 
 	@SuppressWarnings("static-access")
 	public static void main(String[] args) throws Exception {
+		
+//		calculatorProperties.loadProperties();
 
 		// add(8,subs(16,mult(3,4)))
 		// div(add(2,3), subs(mult(3,4),add(2,2)))
