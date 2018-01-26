@@ -58,3 +58,8 @@ z = x*2 + y<br/>
 z: 20<br/>
 x = z – y<br/>
 x: 8<br/>
+
+## Important
+Don't forget to configure build path.<br/>
+Add commons-lang and gson jars from project folder.<br/>
+Add JUnit 4 library.
