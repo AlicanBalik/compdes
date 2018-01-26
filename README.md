@@ -58,9 +58,3 @@ z = x*2 + y<br/>
 z: 20<br/>
 x = z – y<br/>
 x: 8<br/>
-Open notepad and enter lines above. Save the file as map.txt<br/>
-Run the program. On the first prompt type “read(test)”<br/>
-Program will read the source code and print lines on console.<br/>
-Type “run”<br/>
-Program should give appropriate results.<br/>
-Type “end” <br/>
