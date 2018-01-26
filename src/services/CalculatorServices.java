@@ -13,16 +13,29 @@ import models.Decision;
 
 public class CalculatorServices {
 	private static final String DELIMETER = "[(\\,\\)|)]";
-	
+
 	private static CalculatorUtils utils;
 	private static CalculatorFile file;
-	
+
 	protected static Map<String, List<Object>> map = new HashMap<String, List<Object>>();
 	protected static boolean isAppStarted = false;
-	
+
 	@SuppressWarnings("static-access")
 	public static void decisionFromInput(String arg) throws Exception, IndexOutOfBoundsException {
-		if (arg.equals(Decision.load.getPrefix())) {
+		if (arg.startsWith(Decision.move.getPrefix())) {
+			// change value of existing variable.
+
+			String variableName = arg.substring(arg.length() - 2);
+			variableName = Character.toString(variableName.charAt(0));
+			String statement = arg.substring(arg.indexOf("(") + 1, arg.indexOf("),") + 1);
+			arg = "(" + variableName + ",(" + statement + ")";
+
+			insertIntoMemory(arg, true);
+
+		} else if (arg.startsWith(Decision.put.getPrefix())) {
+			// sets a value to a variable.
+			insertIntoMemory(arg, false);
+		} else if (arg.equals(Decision.load.getPrefix())) {
 			map = file.loadFile();
 			System.out.println("Variables are loaded into program.");
 		} else if (arg.equals(Decision.save.getPrefix())) {
@@ -38,30 +51,6 @@ public class CalculatorServices {
 				System.out.println("Value: " + helper.get(1));
 			} else {
 				System.err.println("Error: You haven't declared any variable named " + variableName);
-			}
-
-		} else if (arg.startsWith(Decision.put.getPrefix())) {
-			// sets a value to a variable.
-
-			List<Object> storeStatementAndValue = new ArrayList<Object>();
-
-			String variableName = arg.substring(arg.indexOf("(") + 1, arg.indexOf(","));
-			if (null == map.get(variableName)) {
-
-				// length - 1 to remove last ) which belongs to main operation.
-				// put( //)//
-				String statement = arg.substring(arg.indexOf(",") + 1, arg.length() - 1);
-				Float result = calculate(statement);
-
-				storeStatementAndValue.add(statement);
-				storeStatementAndValue.add(result);
-
-				map.put(variableName, storeStatementAndValue);
-				System.out.println("Variable '" + variableName + "' has been declared.\nType get(" + variableName
-						+ ") to see its value.");
-
-			} else {
-				System.err.println("Error: Variable '" + variableName + "' exists in the map.");
 			}
 
 		} else if (arg.startsWith(Decision.print.getPrefix())) {
@@ -90,8 +79,13 @@ public class CalculatorServices {
 				System.err.println("Error: No variable named '" + variableName + "' found.");
 			}
 		} else {
-			Float result = calculate(arg);
-			System.out.println("Unsaved result: " + result);
+			if (arg.equals("end") || arg.equals("exit")) {
+				System.out.println("Program has been closed");
+				CalculatorUtils.exit(0);
+			} else {
+				Float result = calculate(arg);
+				System.out.println("Unsaved result: " + result);
+			}
 		}
 	}
 
@@ -122,11 +116,13 @@ public class CalculatorServices {
 					String numberTwo = storesNumber.get(size - 1).toString();
 					switch (token) {
 					case "add":
-						storesNumber.set(size - 2, utils.convertStringToFloat(numberOne) + utils.convertStringToFloat(numberTwo));
+						storesNumber.set(size - 2,
+								utils.convertStringToFloat(numberOne) + utils.convertStringToFloat(numberTwo));
 						storesNumber.remove(size - 1);
 						break;
 					case "subs":
-						storesNumber.set(size - 2, utils.convertStringToFloat(numberTwo) - utils.convertStringToFloat(numberOne));
+						storesNumber.set(size - 2,
+								utils.convertStringToFloat(numberTwo) - utils.convertStringToFloat(numberOne));
 						storesNumber.remove(size - 1);
 						break;
 					case "mult":
@@ -135,7 +131,8 @@ public class CalculatorServices {
 						storesNumber.remove(size - 1);
 						break;
 					case "div":
-						storesNumber.set(size - 2, utils.convertStringToFloat(numberTwo) / utils.convertStringToFloat(numberOne));
+						storesNumber.set(size - 2,
+								utils.convertStringToFloat(numberTwo) / utils.convertStringToFloat(numberOne));
 						storesNumber.remove(size - 1);
 						break;
 					default:
@@ -147,6 +144,30 @@ public class CalculatorServices {
 		isAppStarted = true;
 
 		return (float) storesNumber.get(0);
+	}
+
+	private static void insertIntoMemory(String arg, boolean isMoved) throws Exception {
+
+		List<Object> storeStatementAndValue = new ArrayList<Object>();
+
+		String variableName = arg.substring(arg.indexOf("(") + 1, arg.indexOf(","));
+		if (null == map.get(variableName) || isMoved) {
+
+			// length - 1 to remove last ) which belongs to main operation.
+			// put( //)//
+			String statement = arg.substring(arg.indexOf(",") + 1, arg.length() - 1);
+			Float result = calculate(statement);
+
+			storeStatementAndValue.add(statement);
+			storeStatementAndValue.add(result);
+
+			map.put(variableName, storeStatementAndValue);
+			System.out.println("Variable '" + variableName + "' has been declared.\nType get(" + variableName
+					+ ") to see its value.");
+
+		} else {
+			System.err.println("Error: Variable '" + variableName + "' exists in the map.");
+		}
 	}
 
 }

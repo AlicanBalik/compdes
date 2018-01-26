@@ -17,17 +17,21 @@ public class CalculatorFile {
 
 	private static final String DOC_NAME = "map";
 	private static final String DOC_EXTENSION = ".txt";
-	private static final String DOC_PATH = "";
+	private static final String DOC_PATH = ""; // no need to set path. let the file be stored in the project folder.
 
-	public static void saveToFile(Map<String, List<Object>> map) throws IOException {
-		Properties properties = new Properties();
+	public static void saveToFile(Map<String, List<Object>> map) throws Exception {
+		if(map.size() > 0) {
+			Properties properties = new Properties();
 
-		for (Map.Entry<String, List<Object>> entry : map.entrySet()) {
-			String jsonList = new Gson().toJson(entry.getValue());
-			properties.put(entry.getKey(), jsonList);
+			for (Map.Entry<String, List<Object>> entry : map.entrySet()) {
+				String jsonList = new Gson().toJson(entry.getValue());
+				properties.put(entry.getKey(), jsonList);
+			}
+			
+			properties.store(new FileOutputStream(DOC_NAME + DOC_EXTENSION), null);
+		} else {
+			throw new Exception("You haven't saved any variable in memory.");
 		}
-		
-		properties.store(new FileOutputStream(DOC_NAME + DOC_EXTENSION), null);
 	}
 
 	public static Map<String, List<Object>> loadFile() throws IOException {

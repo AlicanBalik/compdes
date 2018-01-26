@@ -48,10 +48,10 @@ public class CalculatorJUnit {
 		Calculator.calculate("add(,,)");
 	}
 
-	@Test(expected = Exception.class)
-	public void calculateWithLettersShouldThrowException() throws IndexOutOfBoundsException, Exception {
-		Calculator.calculate("add(a,3.5)");
-	}
+//	@Test(expected = Exception.class)
+//	public void calculateWithLettersShouldThrowException() throws IndexOutOfBoundsException, Exception {
+//		Calculator.calculate("add(a,3.5)");
+//	}
 
 	@Test(expected = Exception.class)
 	public void calculateWithWrongSyntaxShouldThrowException() throws IndexOutOfBoundsException, Exception {
