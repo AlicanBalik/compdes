@@ -8,7 +8,7 @@ public class CalculatorUtils {
 		// When using multiple threading, if one of them executes System.exit(0),
 		// it will be deadlock.
 		// Deadlock occurs when 2 threads wait for each other.
-		// Due of the fact that they unfortunately can't proceed.
+		// Due to the fact that they unfortunately can't proceed.
 
 		// How deadlock occurs when calling System.exit(0):
 		// this method should not be called from an unknown thread. System.exit never
