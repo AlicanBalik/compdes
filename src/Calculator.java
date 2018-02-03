@@ -12,10 +12,11 @@ public class Calculator extends CalculatorServices {
 		// calculatorProperties.loadProperties();
 
 		/**********************************************
-		* put(a,add(8,subs(16,mult(3,4))))
-		* put(b,add(22,subs(16,mult(3,4))))
-		* put(c,div(add(2,3), subs(mult(3,4),add(2,2))))
+		* put(a,add(8,sub(16,mult(3,4))))
+		* put(b,add(22,sub(16,mult(3,4))))
+		* put(c,div(add(2,3), sub(mult(3,4),add(2,2))))
 		
+		* get(a)
 		* move(add(b,c),a)
 		* get(a)
 		* remove(a)

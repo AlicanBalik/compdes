@@ -125,6 +125,11 @@ public class CalculatorServices {
 								utils.convertStringToFloat(numberTwo) - utils.convertStringToFloat(numberOne));
 						storesNumber.remove(size - 1);
 						break;
+					case "sub":
+						storesNumber.set(size - 2,
+								utils.convertStringToFloat(numberTwo) - utils.convertStringToFloat(numberOne));
+						storesNumber.remove(size - 1);
+						break;
 					case "mult":
 						storesNumber.set(size - 2, utils.convertStringToFloat(storesNumber.get(size - 2).toString())
 								* utils.convertStringToFloat(storesNumber.get(size - 1).toString()));
